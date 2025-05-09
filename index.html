@@ -16,7 +16,7 @@
         margin: 0 auto;
       }
       .lastResult {
-        color: white;
+        color: rgb(0, 0, 0);
         padding: 3px;
       }
     </style>
@@ -41,41 +41,41 @@
 </body>
 
 <script>
-  let randomNumber = Math.random() * 10;
+  let randomNumber = Math.floor(Math.random() * 100) + 1;
+  let ATTEMPS = 10;
+  let guesses = document.querySelector('.guesses');
+  let lastResult = document.querySelector('.lastResult');
+  let lowOrHi = document.querySelector('.lowOrHi');
+  let guessSubmit = document.querySelector('.guessSubmit');
+  let guessField = document.querySelector('.guessField');
 
-  const ATTEMPS = 5;
-  const guesses = document.querySelector('.guesses');
-  const lastResult = document.querySelector('.lastResult');
-  const lowOrHi = document.querySelector('lowOrHi');
-  const guessSubmit = document.querySelector('.guessSubmit');
-  const guessField = document.querySelector('.guessField');
-
-  let guessCount = 1;
+  let guessCount = 17;
   let resetButton;
 
   function checkGuess() {
+    let userGuess = Number(guessField.value);
 
-    let userGuess = guessField.value;
-    if(guessCount === 1) {
-      guesses.textContent = 'Número aleatorio anterior: ';
+    if (guessCount === 1) {
+      guesses.textContent = 'Números anteriores: ';
     }
     guesses.textContent += userGuess + ' ';
 
-    if(userGuess === randomNumber) {
-      lastResult.textContent = '!!!Pérdistes!!!';
+    if (userGuess === randomNumber) {
+      lastResult.textContent = '¡Felicitaciones! Adivinaste el número!';
+      lastResult.style.backgroundColor = 'green';
+      lowOrHi.textContent = '';
+      setGameOver();
+    } else if (guessCount === ATTEMPS) {
+      lastResult.textContent = '¡Perdiste! Se acabaron los intentos.';
       lastResult.style.backgroundColor = 'black';
       lowOrHi.textContent = '';
       setGameOver();
-    } else if(guessCount === ATTEMPS) {
-      lastResult.textContent = 'Felicitaciones! adivinaste el número!';
-      lastResult.style.backgroundColor = 'red';
-      setGameOver();
     } else {
-      lastResult.textContent = 'Incorrecto! ';
-      lastResult.style.backgroundColor = 'green';
-      if(userGuess < randomNumber) {
+      lastResult.textContent = '¡Incorrecto!';
+      lastResult.style.backgroundColor = 'red';
+      if (userGuess < randomNumber) {
         lowOrHi.textContent = 'El número es mayor!';
-      } else if(userGuess > randomNumber) {
+      } else {
         lowOrHi.textContent = 'El número es menor!';
       }
     }
@@ -84,34 +84,35 @@
     guessField.value = '';
     guessField.focus();
   }
-  guessSubmit.addeventListener('click', checkGuess);
+
+  guessSubmit.addEventListener('click', checkGuess);
 
   function setGameOver() {
-	  guessField.disabled = true;
-	  guessSubmit.disabled = true;
-	  resetButton = document.createElement('button');
-	  resetButton.textContent = 'Comienza un nuevo juego';
-	  document.body.appendChild(resetButton);
-	  resetButton.addeventListener('click', resetGame);
+    guessField.disabled = true;
+    guessSubmit.disabled = true;
+    resetButton = document.createElement('button');
+    resetButton.textContent = 'Comienza un nuevo juego';
+    document.body.appendChild(resetButton);
+    resetButton.addEventListener('click', resetGame);
   }
 
   function resetGame() {
-	  guessCount = 1;
+    guessCount = 1;
 
-	  const resetParas = document.querySelectorAll('.resultParas p');
-	  for(let i = 0; i < resetParas.length; i++) {
-		  resetParas[i].textContent = '';
-	  }
-	  resetButton.parentNode.removeChild(resetButton);
+    const resetParas = document.querySelectorAll('.resultParas p');
+    for (let i = 0; i < resetParas.length; i++) {
+      resetParas[i].textContent = '';
+    }
+    resetButton.parentNode.removeChild(resetButton);
 
-	  guessField.disabled = false;
-	  guessSubmit.disabled = false;
-	  guessField.value = '';
-	  guessField.focus();
+    guessField.disabled = false;
+    guessSubmit.disabled = false;
+    guessField.value = '';
+    guessField.focus();
 
-	  lastResult.style.backgroundColor = 'white';
+    lastResult.style.backgroundColor = 'white';
 
-	  randomNumber = Math.floor(Math.random()) + 1;
+    randomNumber = Math.floor(Math.random() * 100) + 1;
   }
 </script>
 </html>
